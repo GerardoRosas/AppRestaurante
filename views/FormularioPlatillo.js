@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import {  } from 'react-native';
+import React, { useContext, useState, useEffect } from 'react';
+import { Alert } from 'react-native';
 import {
     Container, 
     Content,
@@ -9,7 +9,9 @@ import {
     Grid,
     Col,
     Button,
-    Text
+    Text,
+    Footer,
+    FooterTab
 
 } from 'native-base';
 import globalStyles from '../styles/global';
@@ -21,8 +23,21 @@ const FormularioPlatillo = () => {
 
     //State local
     const [ cantidad, guardarCantidad ] = useState(1);
+    const [ total, guardarTotal ] = useState(0);
 
-    const { platillo } = useContext(PedidoContext);
+    //Extraemos el context
+    const { platillo, guardarPedido } = useContext(PedidoContext);
+    const { precio } = platillo;
+
+    useEffect(() => {
+        carlcularTotal()
+    }, [cantidad])
+
+    //Calcula el total del platillo
+    const carlcularTotal = () => {
+        const totalPagar = precio * cantidad;
+        guardarTotal(totalPagar);
+    }
 
     //Decrementa en uno el state 
     const decrementarUno = () => {
@@ -39,8 +54,37 @@ const FormularioPlatillo = () => {
         guardarCantidad(nuevaCantidad);
     }
 
+    //Confirma si la orden es correcta 
+    const confirmarOrden = () => {
+        Alert.alert(
+            '¿Deseas confirmar tu pedido?',
+            '',
+            [
+                {
+                    text: 'Confirmar',
+                    onPress: () => {
+                        //Almacenar el pedido al pedido principal
+                        const pedido = {
+                            ...platillo,
+                            cantidad,
+                            total
+                        }
+                        guardarPedido(pedido);
+                        navigation.navigate('ResumenPedido')
+
+                        //Navegar hacia el resumen
+                    }
+                },
+                {
+                    text: 'Cancelar',
+                    style: 'cancel'
+                }
+            ]
+        )
+    }
     
-    
+    //Redireccionar 
+    const navigation = useNavigation();
 
     return ( 
         <Container>
@@ -76,9 +120,21 @@ const FormularioPlatillo = () => {
                             </Button>
                         </Col>
                     </Grid>
+
+                    <Text style={globalStyles.cantidad}>Subtotal: {total}</Text>
                 </Form>
-                    
             </Content>
+            <Footer>
+                    <FooterTab>
+                        <Button 
+                            style={globalStyles.boton}
+                            rounded
+                            onPress={() => confirmarOrden()}
+                        >
+                            <Text style={globalStyles.botonTexto}>Agregar al Pedido</Text>
+                        </Button>
+                    </FooterTab>
+            </Footer>
         </Container>
     );
 }

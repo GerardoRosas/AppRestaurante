@@ -49,6 +49,7 @@ const DetallePlatillo = () => {
                     <Button 
                         style={globalStyles.boton}
                         onPress={() => navigation.navigate("FormularioPlatillo")}
+                        rounded
                     >
                         <Text style={globalStyles.botonTexto}>Ordenar Platillo</Text>
                     </Button>

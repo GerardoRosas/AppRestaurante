@@ -17,6 +17,7 @@
     "lodash": "^4.17.19",
     "native-base": "^2.13.13",
     "react": "16.13.1",
+    "react-countdown": "^2.2.1",
     "react-native": "0.63.1",
     "react-native-gesture-handler": "^1.6.1",
     "react-native-reanimated": "^1.9.0",
